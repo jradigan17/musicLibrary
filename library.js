@@ -37,6 +37,7 @@ const consoleHalfLine = '-'.repeat((process.stdout.columns) / 2);
 const consoleThreeQuarterLine = '-'.repeat((process.stdout.columns) / 4 * 3);
 // console.log(conColorCyan + conColorBright + consoleLine + conColorReset);
 
+console.clear();
 
 // ------------------------------------------------------------------------------------
 // prints a list of all playlists, in the form:
@@ -71,7 +72,12 @@ const printTracks = () => {
       let tmp = library[each];
       for (let list in tmp) {
         console.log(conColorRed + conColorBright + consoleThreeQuarterLine + conColorReset);
-        console.log(`${conColorCyan}Track ID: ${list}\t\t\tTrack Name: ${tmp[list]["name"]}\nArtist: ${tmp[list]["artist"]}\t\tAlbum: ${tmp[list]["album"]}${conColorReset}`);
+        
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
+        // one would still need to fuss a bit to come up with the right numbers for padEnd, but it's more consistent than tabs. 
+        console.log(`${conColorCyan}Track ID: ${list.padEnd(17, '.')} Track Name: ${tmp[list]["name"]}`);
+        console.log(`Artist: ${tmp[list]["artist"].padEnd(19, '.')} Album: ${tmp[list]["album"]}${conColorReset}`);
+
         console.log(conColorRed + conColorBright + consoleThreeQuarterLine + conColorReset);
       }
     }
@@ -99,7 +105,7 @@ const printPlaylist = playlistId => {
       for (let list in tmp) {
         if (list === playlistId) {
           let tmp1 = tmp[list];
-          console.log(`${conColorMagenta}Playlist ID: ${playlistId}\tPlaylist Name: ${tmp[list]["name"]}\tNumber of Tracks: ${tmp[list]["tracks"].length}${conColorReset}`);
+          console.log(`${conColorMagenta}Playlist ID: ${playlistId.padEnd(16)}Playlist Name: ${tmp[list]["name"]}\tNumber of Tracks: ${tmp[list]["tracks"].length}${conColorReset}`);
           trackNames(tmp1["tracks"]);
         }
         
@@ -116,7 +122,8 @@ const trackNames = (trackList) => {
       for (let list in trackList) {
         for (let jam in tmp) {
           if (jam === trackList[list]) {
-            console.log(`${conColorCyan}Track ID: ${trackList[list]}\t\tTrack Name: ${tmp[jam]["name"]}\nArtist: ${tmp[jam]["artist"]}\tAlbum: ${tmp[jam]["album"]}${conColorReset}`);
+            console.log(`${conColorCyan}Track ID: ${trackList[list].padEnd(18)} Track Name: ${tmp[jam]["name"]}`);
+            console.log(`Artist: ${tmp[jam]["artist"].padEnd(20)} Album: ${tmp[jam]["album"]}${conColorReset}`);
           }
         }
       }
@@ -165,7 +172,9 @@ console.log(conColorCyan + conColorBright + consoleLine + conColorReset);
 const generateUid = () => {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 };
-
+//
+// I asssumed to generate new track and playlist identifiers instead of reading & creating them in sequence like you did.
+//
 console.log(conColorCyan + conColorBright + consoleLine + conColorReset);
 console.log(`${conColorGreen}Generate a unique ID${conColorReset}`);
 console.log(generateUid());
